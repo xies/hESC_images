@@ -47,7 +47,7 @@ def segment(image,Nerode=10,min_size=300):
     # Label 1 is actually the background -> Need to set to 0
     nuclei[nuclei == 1] = 0
     
-    return nuclei
+    return nuclei,mask
 
     
 """

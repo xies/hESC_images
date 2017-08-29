@@ -1,6 +1,14 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
+Created on Thu Aug 10 18:09:47 2017
+
+@author: mimi
+"""
+
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+"""
 Created on Mon Jul 31 11:34:23 2017
 
 @author: mimi
@@ -33,36 +41,28 @@ max_size = 2000
 ip_threshold = 17
 
 # Which experiment set to process
-which_replicate = '1'
-conditions = ['DMSO','400nM_PD','9uM_RO']
+conditions = ['DMSO','500nM_PD','1uM_Roscov']
 c = 1
 
 # Go through all positions available for the replicate + condition
 all_props = pd.DataFrame()
 for position in range(10):
-    position += 2
+    position += 1
     
     # Filename base
-    base = "".join(['/Users/mimi/Box Sync/hESCs/Images/7_30_2017_H9_hESC_1day_inhibitors_DAPI_Sox2488_Nanog594/',
-            'Rep', which_replicate, '/', conditions[c], '/',str(position), '/'])
+    base = "".join(['/Users/mimi/Box Sync/hESCs/Images/8_10_2017_H9_hESC_22hr_inhibitors_DAPI_Sox2488_Nanog594/',
+            conditions[c], '/',str(position), '/'])
     
     # DAPI channel is _01
-    filename = ''.join([base,str(position),'_01.tif'])
+    filename = ''.join([base,str(position),'.tif'])
     im = io.imread(filename)
-    dapi = filters.gaussian(im,sigma=1)
-
-    # SOX channel is 02
-    filename = ''.join([base,str(position),'_02.tif'])
-    im = io.imread(filename)
-    sox = filters.gaussian(im,sigma=1)
-    
-    # NANOG channel is 03
-    filename = ''.join([base,str(position),'_03.tif'])
-    im = io.imread(filename)
-    nanog = filters.gaussian(im,sigma=1)
+    im = filters.gaussian(im,sigma=1)
+    dapi = im[...,1]
+    sox = im[...,2]
+    nanog = im[...,3]
 
     # Segment the DAPI channel
-    nuclei = segment(dapi,Nerode=11,min_size=300)
+    nuclei = segment(dapi,Nerode=10,min_size=300)
     nuclei = morphology.remove_small_objects(nuclei,min_size=300) #pre-filter
     
     # Get object properties
